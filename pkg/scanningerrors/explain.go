@@ -36,7 +36,7 @@ var errCategoryExplanations = map[string]string{
 
 	licenseIssue: `This probably means that you added or upgraded a dependency, and the
 		automated opensource-license-checker objects to what it sees.  This may because of a
-		bug in the checker (github.com/datawire/go-mkopensource) that you need to go fix, or
+		bug in the checker (github.com/telepresenceio/go-mkopensource) that you need to go fix, or
 		it may be because of an actual license issue that prevents you from being allowed to
 		use a package, and you need to find an alternative.`,
 
@@ -47,7 +47,7 @@ var errCategoryExplanations = map[string]string{
 
 		Some possible causes for  this issue are:
 
-		- Dependency is proprietary Ambassador Labs software: Create a yaml file with the proprietary 
+		- Dependency is proprietary software: Create a yaml file with the proprietary 
           dependencies and pass it to the generate.sh script using the --proprietary-packages command line option.
           See the README.md file for more information.
 
@@ -56,15 +56,9 @@ var errCategoryExplanations = map[string]string{
           or hardcodedJsDependencies depending on the dependency that
           was not identified.`,
 
-	internalUsageOnly: `To solve this error, replace the dependency with another that uses an acceptable license.
+	internalUsageOnly: `To solve this error, replace the dependency with another that uses an acceptable license.`,
 
-        Refer to https://www.notion.so/datawire/License-Management-5194ca50c9684ff4b301143806c92157#1cd50aeeafa7456bba24c761c0a2d173 
-        for more details.`,
-
-	licenseForbidden: `To solve this error, replace the dependency with another that uses an acceptable license.
-
-        Refer to https://www.notion.so/datawire/License-Management-5194ca50c9684ff4b301143806c92157#1cd50aeeafa7456bba24c761c0a2d173 
-        for more details.`,
+	licenseForbidden: `To solve this error, replace the dependency with another that uses an acceptable license.`,
 }
 
 func ExplainErrors(errs []error) error {
@@ -93,7 +87,7 @@ func ExplainErrors(errs []error) error {
 		}
 		for i, errStr := range errStrs {
 			_, _ = fmt.Fprintf(msg, " %d. %s\n", i+1, errStr)
-			if errStr == `Package "github.com/josharian/intern": could not identify a license for all sources (had no global LICENSE file)` {
+			if errStr == `package "github.com/josharian/intern": could not identify a license for all sources (had no global LICENSE file)` {
 				explanation += `
 
 					For github.com/josharian/intern in particular, this probably

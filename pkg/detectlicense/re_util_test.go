@@ -5,10 +5,9 @@ import (
 	"testing"
 )
 
-// reTest isn't used normally, but is super duper useful for debuging
+// reTest isn't used normally, but is super-duper useful for debugging
 // the complex license regexes.
-
-//nolint:deadcode,unused // See the doc comment above
+//nolint:unused // See the doc comment above
 func reTest(t *testing.T, re *regexp.Regexp, str string) {
 	t.Helper()
 	if reMatch(re, []byte(str)) {

@@ -3,13 +3,14 @@ package dependency
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
-	"github.com/datawire/go-mkopensource/pkg/scanningerrors"
 	"io"
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/scanningerrors"
 )
 
 type NodeDependencies map[string]nodeDependency
@@ -36,7 +37,7 @@ func (n *nodeDependency) licenses() (string, error) {
 		for _, v := range licenseArray {
 			license, ok := v.(string)
 			if !ok {
-				return "", fmt.Errorf("Dependency '%s@%s' has an invalid license field: %#v", n.Name, n.Version, n.Licenses)
+				return "", fmt.Errorf("dependency '%s@%s' has an invalid license field: %#v", n.Name, n.Version, n.Licenses)
 			}
 			licenses = append(licenses, license)
 		}
@@ -44,7 +45,7 @@ func (n *nodeDependency) licenses() (string, error) {
 		return strings.Join(licenses, " AND "), nil
 	}
 
-	return "", fmt.Errorf("Dependency '%s@%s' has an invalid license field: %v", n.Name, n.Version, n.Licenses)
+	return "", fmt.Errorf("dependency '%s@%s' has an invalid license field: %v", n.Name, n.Version, n.Licenses)
 }
 
 func GetDependencyInformation(r io.Reader, licenseRestriction detectlicense.LicenseRestriction) (dependencyInfo dependencies.DependencyInfo, err error) {
@@ -89,7 +90,7 @@ loop:
 	}
 
 	if err := dependencyInfo.UpdateLicenseList(); err != nil {
-		return dependencyInfo, fmt.Errorf("Could not generate list of license URLs for JavaScript: %v\n", err)
+		return dependencyInfo, fmt.Errorf("could not generate list of license URLs for JavaScript: %w", err)
 	}
 
 	return dependencyInfo, err
@@ -120,7 +121,7 @@ func getDependencyLicenses(dependencyId string, nodeDependency nodeDependency) (
 	}
 
 	if licenseString == "" {
-		return nil, fmt.Errorf("Dependency '%s@%s' is missing a license identifier.", nodeDependency.Name, nodeDependency.Version)
+		return nil, fmt.Errorf("dependency '%s@%s' is missing a license identifier", nodeDependency.Name, nodeDependency.Version)
 	}
 
 	parenthesisRe, err := regexp.Compile(`^\(|\)$`)
@@ -149,7 +150,7 @@ func getDependencyLicenses(dependencyId string, nodeDependency nodeDependency) (
 			break
 		}
 
-		return nil, fmt.Errorf("Dependency '%s@%s' has an unknown SPDX Identifier '%s'.",
+		return nil, fmt.Errorf("dependency '%s@%s' has an unknown SPDX Identifier '%s'",
 			nodeDependency.Name, nodeDependency.Version, spdxId)
 	}
 

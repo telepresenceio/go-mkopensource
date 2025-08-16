@@ -1,3 +1,4 @@
+version: "2"
 linters:
   enable:
     - depguard
@@ -5,22 +6,39 @@ linters:
     - gochecknoglobals
     - gochecknoinits
     - nolintlint
-linters-settings:
-  depguard:
-    rules:
-      main:
-        deny:
-          - pkg: "io/ioutil"
-            desc: "`io/ioutil` is deprecated in Go 1.16, use `io` or `os` instead"
-  errcheck:
-    exclude-functions:
-      - "io.WriteString(*text/tabwriter.Writer)"
-  forbidigo:
-    forbid:
-      - '^os\.(DirEntry|FileInfo|FileMode|PathError)$' # deprecated in Go 1.16, import them from 'io/fs' instead
-      - '\.Readdir$' # deprecated in Go 1.16, use ReadDir instead
-  nolintlint:
-    allow-unused: false
-    allow-leading-space: false
-    require-explanation: true
-    require-specific: true
+  settings:
+    depguard:
+      rules:
+        main:
+          deny:
+            - pkg: io/ioutil
+              desc: '`io/ioutil` is deprecated in Go 1.16, use `io` or `os` instead'
+    errcheck:
+      exclude-functions:
+        - io.WriteString(*text/tabwriter.Writer)
+    forbidigo:
+      forbid:
+        - pattern: ^os\.(DirEntry|FileInfo|FileMode|PathError)$
+        - pattern: \.Readdir$
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+      allow-unused: false
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

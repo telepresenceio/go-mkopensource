@@ -10,7 +10,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/datawire/go-mkopensource/pkg/golist"
+	"github.com/telepresenceio/go-mkopensource/pkg/golist"
 )
 
 // VendorList returns a listing of all packages in

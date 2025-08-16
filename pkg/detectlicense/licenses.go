@@ -27,8 +27,7 @@ type License struct {
 
 //nolint:gochecknoglobals // Would be 'const'.
 var (
-	AmbassadorProprietary = License{Name: "proprietary Ambassador software"}
-	ZeroBSD               = License{Name: "BSD Zero Clause License",
+	ZeroBSD = License{Name: "BSD Zero Clause License",
 		URL: "https://spdx.org/licenses/0BSD.html", Restriction: Unrestricted}
 	Apache2 = License{Name: "Apache License 2.0", NoticeFile: true,
 		URL: "https://opensource.org/licenses/Apache-2.0", Restriction: Unrestricted}
@@ -176,21 +175,20 @@ func DetectLicenses(packageName string, packageVersion string, files map[string]
 	hasNonSPDXSource := false
 	patents := []string(nil)
 
-loop:
 	for filename, filebody := range files {
 
 		switch filename {
 		case "github.com/miekg/dns/COPYRIGHT":
 			// This file identifies copyright holders, but
 			// the license info is in the LICENSE file.
-			continue loop
+			continue
 		case "sigs.k8s.io/kustomize/kyaml/LICENSE_TEMPLATE":
 			// This is a template file for generated code,
 			// not an actual license file.
-			continue loop
+			continue
 		case "github.com/telepresenceio/telepresence/v2/LICENSES.md":
 			// Licenses for telepresence are in LICENSE and not in LICENSES.md
-			continue loop
+			continue
 		}
 
 		name := filepath.Base(filename)
@@ -203,10 +201,12 @@ loop:
 			strings.HasPrefix(name, "COPYING") ||
 			strings.HasPrefix(name, "COPYRIGHT") ||
 			strings.HasPrefix(name, "LEGAL") ||
-			strings.HasPrefix(name, "LICENSE"):
+			strings.HasPrefix(name, "LICENSE") ||
+			name == "license.txt":
 			ls := IdentifyLicenses(filebody)
 			if len(ls) == 0 {
-				return nil, fmt.Errorf("could not identify license in file %q", filename)
+				// Not fatal until we've examined all files.
+				continue
 			}
 			if name == "LICENSE.docs" && len(ls) == 1 {
 				if _, isCc := ls[CcBySa40]; isCc {
@@ -418,12 +418,7 @@ func IdentifyLicenses(body []byte) map[License]struct{} {
 		licenses[ISC] = struct{}{}
 	case reMatch(regexp.MustCompile(``+
 		`(?:`+strings.Join(bsd3funnyAttributionLines, `\s*|`)+`\s*)*`+
-		reWrap(``+
-			bsdPrefix+
-			bsdClause1+
-			bsdClause2+
-			bsdClause3+
-			bsdSuffix)+
+		reBSD3NoHeader.String()+
 		`(?:\s*`+strings.Join(bsd3funnyAttributionLines, `|\s*`)+`)*\s*`),
 		body):
 		// github.com/gogo/protobuf/LICENSE
@@ -435,9 +430,19 @@ func IdentifyLicenses(body []byte) map[License]struct{} {
 		licenses[Apache2] = struct{}{}
 	case reMatch(regexp.MustCompile(reApacheLicense.String()+
 		`\n-+\n\nSome files carry the following license, noted at the top of each file:\n`+
-		reMIT.String()),
+		reMIT.String()+
+		`\n\n-+\n\nSome files carry the "BSD" license, noted at the top of each file:\n`+
+		reBSD3NoHeader.String()),
 		body):
 		// gvisor.dev/gvisor/LICENSE
+		licenses[Apache2] = struct{}{}
+		licenses[MIT] = struct{}{}
+		licenses[BSD3] = struct{}{}
+	case reMatch(regexp.MustCompile(reApacheLicense.String()+
+		`\n-+\n\nSome files carry the following license, noted at the top of each file:\n`+
+		reMIT.String()),
+		body):
+		// Older gvisor.dev/gvisor/LICENSE
 		licenses[Apache2] = struct{}{}
 		licenses[MIT] = struct{}{}
 	case reMatch(regexp.MustCompile(fmt.Sprintf(`%s=*\s*The lexer and parser[^\n]*\n[^\n]*below\.%s`, reMIT, reMIT)), body):

@@ -6,35 +6,22 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-//nolint:gochecknoglobals // Would be 'const'.
-var ambassadorPrivateRepos = map[string]struct{}{
-	"github.com/datawire/telepresence2-proprietary/": {},
-	"github.com/datawire/saas_app/":                  {},
-	"github.com/datawire/telepresence-pro/":          {},
-}
+type ProprietarySoftware map[string]struct{}
 
-type AmbassadorProprietarySoftware map[string]struct{}
-
-func GetAmbassadorProprietarySoftware(proprietarySoftware ...string) AmbassadorProprietarySoftware {
-	ambProprietarySoftware := AmbassadorProprietarySoftware{}
-
-	for k, v := range ambassadorPrivateRepos {
-		ambProprietarySoftware[k] = v
-	}
-
+func GetProprietarySoftware(proprietarySoftware ...string) ProprietarySoftware {
+	ambProprietarySoftware := make(ProprietarySoftware, len(proprietarySoftware))
 	for _, v := range proprietarySoftware {
 		ambProprietarySoftware[v] = struct{}{}
 	}
-
 	return ambProprietarySoftware
 }
 
-func (a AmbassadorProprietarySoftware) IsProprietarySoftware(packageName string) bool {
+func (a ProprietarySoftware) IsProprietarySoftware(packageName string) bool {
 	_, ok := a[packageName]
 	return ok
 }
 
-func (a AmbassadorProprietarySoftware) ReadProprietarySoftwareFile(name string) error {
+func (a ProprietarySoftware) ReadProprietarySoftwareFile(name string) error {
 	data, err := os.ReadFile(name)
 	if err != nil {
 		return err

@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/datawire/go-mkopensource/cmd/js-mkopensource/dependency"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/cmd/js-mkopensource/dependency"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
 	"github.com/spf13/pflag"
 	"os"
 )
@@ -13,8 +13,7 @@ const (
 	// Validations to do on the licenses.
 	// The only validation for "internal" is to check chat forbidden licenses are not used
 	internalApplication = "internal"
-	// "external" applications have additional license requirements as documented in
-	//https://www.notion.so/datawire/License-Management-5194ca50c9684ff4b301143806c92157
+	// "external" applications have additional license requirements.
 	externalApplication = "external"
 )
 

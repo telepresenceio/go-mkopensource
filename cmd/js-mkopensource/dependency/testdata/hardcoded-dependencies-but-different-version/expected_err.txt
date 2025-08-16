@@ -1,5 +1,5 @@
 1 license-detection error:
- 1. Dependency 'cyclist@0.2.3' has an unknown SPDX Identifier 'MIT*'.
+ 1. dependency 'cyclist@0.2.3' has an unknown SPDX Identifier 'MIT*'
     This probably means that you added or upgraded a dependency, and the
     automated opensource-license-checker can't confidently detect what
     the license is.  (This is a good thing, because it is reminding you
@@ -7,10 +7,10 @@
 
     Some possible causes for this issue are:
 
-    - Dependency is proprietary Ambassador Labs software: Create a yaml
-    file with the proprietary dependencies and pass it to the
-    generate.sh script using the --proprietary-packages command line
-    option.  See the README.md file for more information.
+    - Dependency is proprietary software: Create a yaml file with the
+    proprietary dependencies and pass it to the generate.sh script using
+    the --proprietary-packages command line option.  See the README.md
+    file for more information.
 
     - License information can't be identified: Add an entry to
     hardcodedGoDependencies, hardcodedPythonDependencies or

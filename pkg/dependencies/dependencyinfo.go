@@ -3,51 +3,51 @@ package dependencies
 import (
 	"encoding/json"
 	"fmt"
-	. "github.com/datawire/go-mkopensource/pkg/detectlicense"
+
+	license "github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
 )
 
 //nolint:gochecknoglobals // Can't be a constant
-var licensesByName = map[string]License{
-	AmbassadorProprietary.Name: AmbassadorProprietary,
-	ZeroBSD.Name:               ZeroBSD,
-	Apache2.Name:               Apache2,
-	AFL21.Name:                 AFL21,
-	AGPL1Only.Name:             AGPL1Only,
-	AGPL1OrLater.Name:          AGPL1OrLater,
-	AGPL3Only.Name:             AGPL3Only,
-	AGPL3OrLater.Name:          AGPL3OrLater,
-	BSD1.Name:                  BSD1,
-	BSD2.Name:                  BSD2,
-	BSD3.Name:                  BSD3,
-	Cc010.Name:                 Cc010,
-	CcBy30.Name:                CcBy30,
-	CcBy40.Name:                CcBy40,
-	CcBySa40.Name:              CcBySa40,
-	EPL10.Name:                 EPL10,
-	GPL1Only.Name:              GPL1Only,
-	GPL1OrLater.Name:           GPL1OrLater,
-	GPL2Only.Name:              GPL2Only,
-	GPL2OrLater.Name:           GPL2OrLater,
-	GPL3Only.Name:              GPL3Only,
-	GPL3OrLater.Name:           GPL3OrLater,
-	ISC.Name:                   ISC,
-	LGPL2Only.Name:             LGPL2Only,
-	LGPL2OrLater.Name:          LGPL2OrLater,
-	LGPL21Only.Name:            LGPL21Only,
-	LGPL21OrLater.Name:         LGPL21OrLater,
-	LGPL3Only.Name:             LGPL3Only,
-	LGPL3OrLater.Name:          LGPL3OrLater,
-	MIT.Name:                   MIT,
-	MPL11.Name:                 MPL11,
-	MPL2.Name:                  MPL2,
-	ODCBy10.Name:               ODCBy10,
-	OFL11.Name:                 OFL11,
-	PSF.Name:                   PSF,
-	Python20.Name:              Python20,
-	PublicDomain.Name:          PublicDomain,
-	Unicode2015.Name:           Unicode2015,
-	Unlicense.Name:             Unlicense,
-	WTFPL.Name:                 WTFPL,
+var licensesByName = map[string]license.License{
+	license.ZeroBSD.Name:       license.ZeroBSD,
+	license.Apache2.Name:       license.Apache2,
+	license.AFL21.Name:         license.AFL21,
+	license.AGPL1Only.Name:     license.AGPL1Only,
+	license.AGPL1OrLater.Name:  license.AGPL1OrLater,
+	license.AGPL3Only.Name:     license.AGPL3Only,
+	license.AGPL3OrLater.Name:  license.AGPL3OrLater,
+	license.BSD1.Name:          license.BSD1,
+	license.BSD2.Name:          license.BSD2,
+	license.BSD3.Name:          license.BSD3,
+	license.Cc010.Name:         license.Cc010,
+	license.CcBy30.Name:        license.CcBy30,
+	license.CcBy40.Name:        license.CcBy40,
+	license.CcBySa40.Name:      license.CcBySa40,
+	license.EPL10.Name:         license.EPL10,
+	license.GPL1Only.Name:      license.GPL1Only,
+	license.GPL1OrLater.Name:   license.GPL1OrLater,
+	license.GPL2Only.Name:      license.GPL2Only,
+	license.GPL2OrLater.Name:   license.GPL2OrLater,
+	license.GPL3Only.Name:      license.GPL3Only,
+	license.GPL3OrLater.Name:   license.GPL3OrLater,
+	license.ISC.Name:           license.ISC,
+	license.LGPL2Only.Name:     license.LGPL2Only,
+	license.LGPL2OrLater.Name:  license.LGPL2OrLater,
+	license.LGPL21Only.Name:    license.LGPL21Only,
+	license.LGPL21OrLater.Name: license.LGPL21OrLater,
+	license.LGPL3Only.Name:     license.LGPL3Only,
+	license.LGPL3OrLater.Name:  license.LGPL3OrLater,
+	license.MIT.Name:           license.MIT,
+	license.MPL11.Name:         license.MPL11,
+	license.MPL2.Name:          license.MPL2,
+	license.ODCBy10.Name:       license.ODCBy10,
+	license.OFL11.Name:         license.OFL11,
+	license.PSF.Name:           license.PSF,
+	license.Python20.Name:      license.Python20,
+	license.PublicDomain.Name:  license.PublicDomain,
+	license.Unicode2015.Name:   license.Unicode2015,
+	license.Unlicense.Name:     license.Unlicense,
+	license.WTFPL.Name:         license.WTFPL,
 }
 
 type DependencyInfo struct {
@@ -77,7 +77,7 @@ func (d *DependencyInfo) Unmarshal(data []byte) error {
 }
 
 func (d *DependencyInfo) UpdateLicenseList() error {
-	usedLicenses := map[string]License{}
+	usedLicenses := map[string]license.License{}
 
 	for _, dependency := range d.Dependencies {
 		for _, licenseName := range dependency.Licenses {
@@ -96,28 +96,28 @@ func (d *DependencyInfo) UpdateLicenseList() error {
 	return nil
 }
 
-func getLicenseFromName(licenseName string) (License, error) {
-	license, ok := licensesByName[licenseName]
+func getLicenseFromName(licenseName string) (license.License, error) {
+	lic, ok := licensesByName[licenseName]
 	if !ok {
-		return License{}, fmt.Errorf("license details for '%s' are not known", licenseName)
+		return license.License{}, fmt.Errorf("license details for '%s' are not known", licenseName)
 	}
-	return license, nil
+	return lic, nil
 }
 
-func CheckLicenseRestrictions(dependency Dependency, licenseName string, licenseRestriction LicenseRestriction) error {
-	license, err := getLicenseFromName(licenseName)
+func CheckLicenseRestrictions(dependency Dependency, licenseName string, licenseRestriction license.LicenseRestriction) error {
+	lic, err := getLicenseFromName(licenseName)
 	if err != nil {
 		return err
 	}
 
-	if license.Restriction == Forbidden {
-		return fmt.Errorf("Dependency '%s@%s' uses license '%s' which is forbidden.", dependency.Name,
-			dependency.Version, license.Name)
+	if lic.Restriction == license.Forbidden {
+		return fmt.Errorf("dependency '%s@%s' uses license '%s' which is forbidden", dependency.Name,
+			dependency.Version, lic.Name)
 	}
 
-	if license.Restriction < licenseRestriction {
-		return fmt.Errorf("Dependency '%s@%s' uses license '%s' which is not allowed on applications that run on customer machines.",
-			dependency.Name, dependency.Version, license.Name)
+	if lic.Restriction < licenseRestriction {
+		return fmt.Errorf("dependency '%s@%s' uses license '%s' which is not allowed on applications that run on customer machines",
+			dependency.Name, dependency.Version, lic.Name)
 	}
 	return nil
 }

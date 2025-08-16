@@ -1,9 +1,9 @@
 package main_test
 
 import (
-	main "github.com/datawire/go-mkopensource/cmd/go-mkopensource"
-	. "github.com/datawire/go-mkopensource/pkg/detectlicense"
-	"github.com/datawire/go-mkopensource/pkg/golist"
+	main "github.com/telepresenceio/go-mkopensource/cmd/go-mkopensource"
+	. "github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/golist"
 	"github.com/stretchr/testify/require"
 	"testing"
 )

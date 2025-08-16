@@ -25,7 +25,7 @@ const (
 		`      without specific prior written permission\.` + "\n"
 	bsdSuffix = `` +
 		`THIS SOFTWARE IS PROVIDED BY .{1,80} AND CONTRIBUTORS` + "\n" +
-		`(?:"|`+"``"+`)AS IS(?:"|'') AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT` + "\n" +
+		`(?:"|` + "``" + `)AS IS(?:"|'') AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT` + "\n" +
 		`LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR` + "\n" +
 		`A PARTICULAR PURPOSE ARE DISCLAIMED\. IN NO EVENT SHALL THE (COPYRIGHT` + "\n" +
 		`(OWNER|HOLDER)|REGENTS)( OR CONTRIBUTORS)? BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,` + "\n" +
@@ -53,4 +53,10 @@ var (
 			bsdClause1+
 			bsdClause2+
 			bsdSuffix)))
+	reBSD3NoHeader = regexp.MustCompile(`\s*` + reWrap(
+		bsdPrefix+
+			bsdClause1+
+			bsdClause2+
+			bsdClause3+
+			bsdSuffix))
 )

@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
-	"github.com/datawire/go-mkopensource/pkg/golist"
 	"sort"
+
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/golist"
 )
 
 func GenerateDependencyList(modNames []string, modLicenses map[string]map[detectlicense.License]struct{},
@@ -15,11 +16,6 @@ func GenerateDependencyList(modNames []string, modLicenses map[string]map[detect
 	errors = []error{}
 
 	for _, modKey := range modNames {
-		ambassadorProprietary := isAmbassadorProprietary(modLicenses[modKey])
-		if ambassadorProprietary {
-			continue
-		}
-
 		modVal := modInfos[modKey]
 
 		dependencyDetails := dependencies.Dependency{
@@ -41,7 +37,7 @@ func GenerateDependencyList(modNames []string, modLicenses map[string]map[detect
 	}
 
 	if err := dependencyList.UpdateLicenseList(); err != nil {
-		errors = append(errors, fmt.Errorf("Could not generate list of license URLs: %v\n", err))
+		errors = append(errors, fmt.Errorf("could not generate list of license URLs: %w", err))
 	}
 
 	return dependencyList, errors

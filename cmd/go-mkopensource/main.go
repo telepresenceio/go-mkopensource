@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -21,10 +20,10 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/pflag"
 
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
-	"github.com/datawire/go-mkopensource/pkg/golist"
-	"github.com/datawire/go-mkopensource/pkg/scanningerrors"
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/golist"
+	"github.com/telepresenceio/go-mkopensource/pkg/scanningerrors"
 )
 
 type CLIArgs struct {
@@ -47,8 +46,7 @@ const (
 	// Validations to do on the licenses.
 	// The only validation for "internal" is to check chat forbidden licenses are not used
 	internalApplication = "internal"
-	// "external" applications have additional license requirements as documented in
-	//https://www.notion.so/datawire/License-Management-5194ca50c9684ff4b301143806c92157
+	// "external" applications have additional license requirements.
 	externalApplication = "external"
 )
 
@@ -184,11 +182,6 @@ func loadGoTar(goTarFilename string) (version string, license []byte, err error)
 	return version, license, nil
 }
 
-func isAmbassadorProprietary(licenses map[detectlicense.License]struct{}) bool {
-	_, ok := licenses[detectlicense.AmbassadorProprietary]
-	return ok
-}
-
 func licenseIsWeakCopyleft(licenses map[detectlicense.License]struct{}) bool {
 	for license := range licenses {
 		if license.WeakCopyleft {
@@ -302,18 +295,16 @@ func Main(args *CLIArgs) error {
 		}
 	}
 
-	ambProprietarySoftware := detectlicense.GetAmbassadorProprietarySoftware()
+	proprietarySoftware := detectlicense.GetProprietarySoftware()
 	if args.ProprietarySoftware != "" {
-		err = ambProprietarySoftware.ReadProprietarySoftwareFile(args.ProprietarySoftware)
+		err = proprietarySoftware.ReadProprietarySoftwareFile(args.ProprietarySoftware)
 		if err != nil {
 			return err
 		}
 	}
 
 	for _, pkgName := range pkgNames {
-		if ambProprietarySoftware.IsProprietarySoftware(pkgName) {
-			// Ambassador's proprietary software has a proprietary license
-			pkgLicenses[pkgName] = map[detectlicense.License]struct{}{detectlicense.AmbassadorProprietary: {}}
+		if proprietarySoftware.IsProprietarySoftware(pkgName) {
 			continue
 		}
 
@@ -322,12 +313,12 @@ func Main(args *CLIArgs) error {
 			if licenses, ok := unparsablePackages[pkgName]; ok {
 				pkgLicenses[pkgName] = licenses
 			} else {
-				err = fmt.Errorf(`Package %q: %w`, pkgName, err)
+				err = fmt.Errorf(`package %q: %w`, pkgName, err)
 				licErrs = append(licErrs, err)
 			}
 		} else {
 			if _, ok := unparsablePackages[pkgName]; ok {
-				licErrs = append(licErrs, fmt.Errorf(`Package %q has a valid license. It must be removed from %s`,
+				licErrs = append(licErrs, fmt.Errorf(`package %q has a valid license. It must be removed from %s`,
 					pkgName, args.UnparsablePackages))
 			}
 		}
@@ -410,10 +401,7 @@ func Main(args *CLIArgs) error {
 		tarFiles := make(map[string][]byte)
 		tarFiles["DEPENDENCIES.md"] = readme.Bytes()
 		for pkgName := range pkgFiles {
-			ambassadorProprietary := isAmbassadorProprietary(pkgLicenses[pkgName])
 			switch {
-			case ambassadorProprietary:
-				// don't include anything
 			case licenseIsWeakCopyleft(pkgLicenses[pkgName]):
 				// include everything
 				for filename, fileBody := range pkgFiles[pkgName] {
@@ -462,11 +450,12 @@ func Main(args *CLIArgs) error {
 	if !args.IgnoreDirty {
 		isDirty, err := isGoModDirty()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "WARNING: could not verify if go.mod or go.sum are dirty: %s.\n", err.Error())
+			fmt.Fprintf(os.Stderr, "WARNING: could not verify if go.mod or go.sum are dirty: %s", err.Error())
 		}
 		if isDirty {
-			return fmt.Errorf("WARNING: go.mod or go.sum are dirty.\nMake sure that these files are commited with the " +
+			fmt.Fprintln(os.Stderr, "Make sure that go.mod and go.sum files are commited with the "+
 				"license information files to maintain consistency between the dependencies and the license information.")
+			return errors.New("go.mod or go.sum are dirty")
 		}
 	}
 
@@ -477,8 +466,7 @@ func tidyGoModFile() error {
 	tidyCmd := exec.Command("go", "mod", "tidy")
 	out, err := tidyCmd.CombinedOutput()
 	if err != nil {
-		log.Printf("'go mod tidy' failed:\n%s\n", out)
-		return fmt.Errorf("'go mod tidy' failed: %w", err)
+		return fmt.Errorf("'go mod tidy' failed: %s", out)
 	}
 	return nil
 }

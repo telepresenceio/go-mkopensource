@@ -1,8 +1,8 @@
 package dependencies_test
 
 import (
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
