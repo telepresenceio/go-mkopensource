@@ -175,21 +175,20 @@ func DetectLicenses(packageName string, packageVersion string, files map[string]
 	hasNonSPDXSource := false
 	patents := []string(nil)
 
-loop:
 	for filename, filebody := range files {
 
 		switch filename {
 		case "github.com/miekg/dns/COPYRIGHT":
 			// This file identifies copyright holders, but
 			// the license info is in the LICENSE file.
-			continue loop
+			continue
 		case "sigs.k8s.io/kustomize/kyaml/LICENSE_TEMPLATE":
 			// This is a template file for generated code,
 			// not an actual license file.
-			continue loop
+			continue
 		case "github.com/telepresenceio/telepresence/v2/LICENSES.md":
 			// Licenses for telepresence are in LICENSE and not in LICENSES.md
-			continue loop
+			continue
 		}
 
 		name := filepath.Base(filename)
@@ -206,7 +205,8 @@ loop:
 			name == "license.txt":
 			ls := IdentifyLicenses(filebody)
 			if len(ls) == 0 {
-				return nil, fmt.Errorf("could not identify license in file %q", filename)
+				// Not fatal until we've examined all files.
+				continue
 			}
 			if name == "LICENSE.docs" && len(ls) == 1 {
 				if _, isCc := ls[CcBySa40]; isCc {
