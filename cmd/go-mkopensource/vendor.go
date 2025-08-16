@@ -104,6 +104,7 @@ var metaPrefixes = []string{
 	"COPYRIGHT",
 	"LEGAL",
 	"LICENSE",
+	"license.txt",
 	"NOTICE",
 	"PATENTS",
 }

@@ -202,7 +202,8 @@ loop:
 			strings.HasPrefix(name, "COPYING") ||
 			strings.HasPrefix(name, "COPYRIGHT") ||
 			strings.HasPrefix(name, "LEGAL") ||
-			strings.HasPrefix(name, "LICENSE"):
+			strings.HasPrefix(name, "LICENSE") ||
+			name == "license.txt":
 			ls := IdentifyLicenses(filebody)
 			if len(ls) == 0 {
 				return nil, fmt.Errorf("could not identify license in file %q", filename)
