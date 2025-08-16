@@ -12,7 +12,7 @@ var (
 		strings.Join([]string{
 			`\(?(The )?MIT License( \((MIT|Expat)\))?\)?`,
 			`(Portions )?Copyright [^\n]*(\s+All rights reserved\.)?`, // copyright line
-			`[^\n]{0,15}`,  // project name
+			`[^\n]{0,60}`,  // project name, and optionally, the provider
 			`https?://\S+`, // project url
 			`=+`,           // separator
 		}, `|`) +
