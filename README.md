@@ -7,16 +7,16 @@
 
 ## Building
 
-You may use `go get github.com/datawire/go-mkopensource`, clone the
+You may use `go get github.com/telepresenceio/go-mkopensource`, clone the
 repo and run `go build .`, or any of the other usual ways of building
 a Go program; there is nothing special about `go-mkopensource`.
 
 ## Using as a library
 
-The [`github.com/datawire/go-mkopensource/pkg/detectlicense`][detectlicense]
+The [`github.com/telepresenceio/go-mkopensource/pkg/detectlicense`][detectlicense]
 package is good at detecting the licenses in a file
 
-[detectlicense]: https://pkg.go.dev/github.com/datawire/go-mkopensource/pkg/detectlicense
+[detectlicense]: https://pkg.go.dev/github.com/telepresenceio/go-mkopensource/pkg/detectlicense
 
 ## Design
 
@@ -194,7 +194,7 @@ jobs:
         run: make generate-dependency-info
       - name: "Save changes made by dependabot"
         id: changed-by-dependabot
-        uses: datawire/go-mkopensource/actions/save-dependabot-changes@v0.0.1
+        uses: telepresenceio/go-mkopensource/actions/save-dependabot-changes@v0.0.1
         with:
           branches_to_skip: "master"
       - name: Abort if dependencies changed
@@ -218,7 +218,7 @@ After the action has been updated, you can verify that it works as expected by u
 to point to the new version of the action.
 
 ```yaml
-uses: datawire/go-mkopensource/actions/save-dependabot-changes@<VERSION>
+uses: telepresenceio/go-mkopensource/actions/save-dependabot-changes@<VERSION>
 ```
 
 Note: If you want to test your changes before they are complete, you could use a branch in the action reference, and

@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
-	"github.com/datawire/go-mkopensource/pkg/golist"
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/golist"
 	"sort"
 )
 

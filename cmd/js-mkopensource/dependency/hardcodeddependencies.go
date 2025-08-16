@@ -1,6 +1,6 @@
 package dependency
 
-import . "github.com/datawire/go-mkopensource/pkg/detectlicense"
+import . "github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
 
 //nolint:gochecknoglobals // Would be 'const'.
 var hardcodedJsDependencies = map[string][]string{

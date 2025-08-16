@@ -11,12 +11,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	main "github.com/datawire/go-mkopensource/cmd/go-mkopensource"
+	main "github.com/telepresenceio/go-mkopensource/cmd/go-mkopensource"
 )
 
 func TestSuccessfulMarkdownOutput(t *testing.T) {

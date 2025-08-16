@@ -3,9 +3,9 @@ package dependency
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
-	"github.com/datawire/go-mkopensource/pkg/scanningerrors"
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/scanningerrors"
 	"io"
 	"regexp"
 	"sort"

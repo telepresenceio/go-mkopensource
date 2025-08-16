@@ -21,10 +21,10 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/spf13/pflag"
 
-	"github.com/datawire/go-mkopensource/pkg/dependencies"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
-	"github.com/datawire/go-mkopensource/pkg/golist"
-	"github.com/datawire/go-mkopensource/pkg/scanningerrors"
+	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/pkg/golist"
+	"github.com/telepresenceio/go-mkopensource/pkg/scanningerrors"
 )
 
 type CLIArgs struct {

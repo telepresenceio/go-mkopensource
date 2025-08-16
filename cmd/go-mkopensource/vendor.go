@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/datawire/go-mkopensource/pkg/golist"
+	"github.com/telepresenceio/go-mkopensource/pkg/golist"
 )
 
 ////////////////////////////////////////////////////////////////////////

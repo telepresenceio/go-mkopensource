@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/datawire/go-mkopensource/cmd/js-mkopensource/dependency"
-	"github.com/datawire/go-mkopensource/pkg/detectlicense"
+	"github.com/telepresenceio/go-mkopensource/cmd/js-mkopensource/dependency"
+	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
 	"github.com/spf13/pflag"
 	"os"
 )

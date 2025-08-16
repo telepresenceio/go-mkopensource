@@ -3,7 +3,7 @@ package dependencies
 import (
 	"encoding/json"
 	"fmt"
-	. "github.com/datawire/go-mkopensource/pkg/detectlicense"
+	. "github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
 )
 
 //nolint:gochecknoglobals // Can't be a constant
