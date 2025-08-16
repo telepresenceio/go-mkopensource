@@ -113,7 +113,7 @@ Program outputs dependency information in json format
 ### Application type
 
 Parameter `--application-type` controls the types of licenses that are
-allowed. Logic is documented in [Notion](https://www.notion.so/datawire/1-Automate-License-Scan-and-Information-Files-31f4cd0f58f645f0afb922cfd710df81)
+allowed.
 
 #### `--application-type=internal`
 

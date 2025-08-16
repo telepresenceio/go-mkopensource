@@ -91,8 +91,7 @@ described above and run `build-aux/generate.sh`
 Tips:
 
 - Add a .dockerignore at the root of your repository and exclude any files that are not necessary for generating depdency
-  information, including DEPENDENCIES.md, DEPENDENCY_INFORMATION.md and temporary folders. See the
-  [saas_app .dockerignore](https://github.com/datawire/saas_app/blob/master/.dockerignore) for a list of suggested exclussions.
+  information, including DEPENDENCIES.md, DEPENDENCY_INFORMATION.md and temporary folders.
 
 ## When scanning fails
 

@@ -56,15 +56,9 @@ var errCategoryExplanations = map[string]string{
           or hardcodedJsDependencies depending on the dependency that
           was not identified.`,
 
-	internalUsageOnly: `To solve this error, replace the dependency with another that uses an acceptable license.
+	internalUsageOnly: `To solve this error, replace the dependency with another that uses an acceptable license.`,
 
-        Refer to https://www.notion.so/datawire/License-Management-5194ca50c9684ff4b301143806c92157#1cd50aeeafa7456bba24c761c0a2d173 
-        for more details.`,
-
-	licenseForbidden: `To solve this error, replace the dependency with another that uses an acceptable license.
-
-        Refer to https://www.notion.so/datawire/License-Management-5194ca50c9684ff4b301143806c92157#1cd50aeeafa7456bba24c761c0a2d173 
-        for more details.`,
+	licenseForbidden: `To solve this error, replace the dependency with another that uses an acceptable license.`,
 }
 
 func ExplainErrors(errs []error) error {
