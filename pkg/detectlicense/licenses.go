@@ -417,12 +417,7 @@ func IdentifyLicenses(body []byte) map[License]struct{} {
 		licenses[ISC] = struct{}{}
 	case reMatch(regexp.MustCompile(``+
 		`(?:`+strings.Join(bsd3funnyAttributionLines, `\s*|`)+`\s*)*`+
-		reWrap(``+
-			bsdPrefix+
-			bsdClause1+
-			bsdClause2+
-			bsdClause3+
-			bsdSuffix)+
+		reBSD3NoHeader.String()+
 		`(?:\s*`+strings.Join(bsd3funnyAttributionLines, `|\s*`)+`)*\s*`),
 		body):
 		// github.com/gogo/protobuf/LICENSE
@@ -434,9 +429,19 @@ func IdentifyLicenses(body []byte) map[License]struct{} {
 		licenses[Apache2] = struct{}{}
 	case reMatch(regexp.MustCompile(reApacheLicense.String()+
 		`\n-+\n\nSome files carry the following license, noted at the top of each file:\n`+
-		reMIT.String()),
+		reMIT.String()+
+		`\n\n-+\n\nSome files carry the "BSD" license, noted at the top of each file:\n`+
+		reBSD3NoHeader.String()),
 		body):
 		// gvisor.dev/gvisor/LICENSE
+		licenses[Apache2] = struct{}{}
+		licenses[MIT] = struct{}{}
+		licenses[BSD3] = struct{}{}
+	case reMatch(regexp.MustCompile(reApacheLicense.String()+
+		`\n-+\n\nSome files carry the following license, noted at the top of each file:\n`+
+		reMIT.String()),
+		body):
+		// Older gvisor.dev/gvisor/LICENSE
 		licenses[Apache2] = struct{}{}
 		licenses[MIT] = struct{}{}
 	case reMatch(regexp.MustCompile(fmt.Sprintf(`%s=*\s*The lexer and parser[^\n]*\n[^\n]*below\.%s`, reMIT, reMIT)), body):
