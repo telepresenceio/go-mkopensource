@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+	"sort"
+
 	"github.com/telepresenceio/go-mkopensource/pkg/dependencies"
 	"github.com/telepresenceio/go-mkopensource/pkg/detectlicense"
 	"github.com/telepresenceio/go-mkopensource/pkg/golist"
-	"sort"
 )
 
 func GenerateDependencyList(modNames []string, modLicenses map[string]map[detectlicense.License]struct{},
@@ -15,11 +16,6 @@ func GenerateDependencyList(modNames []string, modLicenses map[string]map[detect
 	errors = []error{}
 
 	for _, modKey := range modNames {
-		ambassadorProprietary := isAmbassadorProprietary(modLicenses[modKey])
-		if ambassadorProprietary {
-			continue
-		}
-
 		modVal := modInfos[modKey]
 
 		dependencyDetails := dependencies.Dependency{

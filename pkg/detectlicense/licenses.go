@@ -27,8 +27,7 @@ type License struct {
 
 //nolint:gochecknoglobals // Would be 'const'.
 var (
-	AmbassadorProprietary = License{Name: "proprietary Ambassador software"}
-	ZeroBSD               = License{Name: "BSD Zero Clause License",
+	ZeroBSD = License{Name: "BSD Zero Clause License",
 		URL: "https://spdx.org/licenses/0BSD.html", Restriction: Unrestricted}
 	Apache2 = License{Name: "Apache License 2.0", NoticeFile: true,
 		URL: "https://opensource.org/licenses/Apache-2.0", Restriction: Unrestricted}

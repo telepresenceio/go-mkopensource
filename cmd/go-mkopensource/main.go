@@ -183,11 +183,6 @@ func loadGoTar(goTarFilename string) (version string, license []byte, err error)
 	return version, license, nil
 }
 
-func isAmbassadorProprietary(licenses map[detectlicense.License]struct{}) bool {
-	_, ok := licenses[detectlicense.AmbassadorProprietary]
-	return ok
-}
-
 func licenseIsWeakCopyleft(licenses map[detectlicense.License]struct{}) bool {
 	for license := range licenses {
 		if license.WeakCopyleft {
@@ -301,18 +296,16 @@ func Main(args *CLIArgs) error {
 		}
 	}
 
-	ambProprietarySoftware := detectlicense.GetAmbassadorProprietarySoftware()
+	proprietarySoftware := detectlicense.GetProprietarySoftware()
 	if args.ProprietarySoftware != "" {
-		err = ambProprietarySoftware.ReadProprietarySoftwareFile(args.ProprietarySoftware)
+		err = proprietarySoftware.ReadProprietarySoftwareFile(args.ProprietarySoftware)
 		if err != nil {
 			return err
 		}
 	}
 
 	for _, pkgName := range pkgNames {
-		if ambProprietarySoftware.IsProprietarySoftware(pkgName) {
-			// Ambassador's proprietary software has a proprietary license
-			pkgLicenses[pkgName] = map[detectlicense.License]struct{}{detectlicense.AmbassadorProprietary: {}}
+		if proprietarySoftware.IsProprietarySoftware(pkgName) {
 			continue
 		}
 
@@ -409,10 +402,7 @@ func Main(args *CLIArgs) error {
 		tarFiles := make(map[string][]byte)
 		tarFiles["DEPENDENCIES.md"] = readme.Bytes()
 		for pkgName := range pkgFiles {
-			ambassadorProprietary := isAmbassadorProprietary(pkgLicenses[pkgName])
 			switch {
-			case ambassadorProprietary:
-				// don't include anything
 			case licenseIsWeakCopyleft(pkgLicenses[pkgName]):
 				// include everything
 				for filename, fileBody := range pkgFiles[pkgName] {
