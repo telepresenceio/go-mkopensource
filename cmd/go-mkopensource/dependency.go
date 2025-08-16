@@ -37,7 +37,7 @@ func GenerateDependencyList(modNames []string, modLicenses map[string]map[detect
 	}
 
 	if err := dependencyList.UpdateLicenseList(); err != nil {
-		errors = append(errors, fmt.Errorf("Could not generate list of license URLs: %v\n", err))
+		errors = append(errors, fmt.Errorf("could not generate list of license URLs: %w", err))
 	}
 
 	return dependencyList, errors

@@ -1,4 +1,4 @@
 1 license-forbidden error:
- 1. Dependency 'example.com/agpl@(modified)' uses license 'GNU Affero General Public License v3.0 or later' which is forbidden.
+ 1. dependency 'example.com/agpl@(modified)' uses license 'GNU Affero General Public License v3.0 or later' which is forbidden
     To solve this error, replace the dependency with another that uses
     an acceptable license.

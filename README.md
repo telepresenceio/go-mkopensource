@@ -48,7 +48,7 @@ application behaviour.
 - `APPLICATION_TYPE`: Required. Where will the application being
   scanned run.
   `internal` is used for anything running on Ambassador Labs servers,
-  and `external` for anything that's deployed to customer machines.
+  and `external` for anything that's deployed to customer machines
 
 - `BUILD_HOME` Required. Location of the root folder of the repo to
   scan.
@@ -112,8 +112,8 @@ The scanner complains about some package that cannot be parsed:
 
 ```bash
 fatal: 2 license-detection errors:
- 1. Package "github.com/Masterminds/squirrel": could not identify license in file "github.com/Masterminds/squirrel/LICENSE"
- 2. Package "github.com/gosimple/unidecode": could not identify license in file "github.com/gosimple/unidecode/LICENSE"
+ 1. package "github.com/Masterminds/squirrel": could not identify license in file "github.com/Masterminds/squirrel/LICENSE"
+ 2. package "github.com/gosimple/unidecode": could not identify license in file "github.com/gosimple/unidecode/LICENSE"
 ```
 
 Confirm the licenses used in the identified repositories. Consult the [SPDX License List](https://spdx.org/licenses/) to get the canonical identifiers and add them to a YAML file.
@@ -154,7 +154,7 @@ The error will message will be similar to this one:
 
 ```bash
 /scripts/go-mkopensource: fatal: 1 license-detection errors:
-  1. Package "github.com/datawire/telepresence-pro/rpc/proconnector": could not identify a license for all sources (had no global LICENSE file)
+  1. package "github.com/datawire/telepresence-pro/rpc/proconnector": could not identify a license for all sources (had no global LICENSE file)
 ```
 
 To exclude these packages, add a yaml file like this:

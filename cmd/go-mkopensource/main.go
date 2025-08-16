@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -314,12 +313,12 @@ func Main(args *CLIArgs) error {
 			if licenses, ok := unparsablePackages[pkgName]; ok {
 				pkgLicenses[pkgName] = licenses
 			} else {
-				err = fmt.Errorf(`Package %q: %w`, pkgName, err)
+				err = fmt.Errorf(`package %q: %w`, pkgName, err)
 				licErrs = append(licErrs, err)
 			}
 		} else {
 			if _, ok := unparsablePackages[pkgName]; ok {
-				licErrs = append(licErrs, fmt.Errorf(`Package %q has a valid license. It must be removed from %s`,
+				licErrs = append(licErrs, fmt.Errorf(`package %q has a valid license. It must be removed from %s`,
 					pkgName, args.UnparsablePackages))
 			}
 		}
@@ -451,11 +450,12 @@ func Main(args *CLIArgs) error {
 	if !args.IgnoreDirty {
 		isDirty, err := isGoModDirty()
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "WARNING: could not verify if go.mod or go.sum are dirty: %s.\n", err.Error())
+			fmt.Fprintf(os.Stderr, "WARNING: could not verify if go.mod or go.sum are dirty: %s", err.Error())
 		}
 		if isDirty {
-			return fmt.Errorf("WARNING: go.mod or go.sum are dirty.\nMake sure that these files are commited with the " +
+			fmt.Fprintln(os.Stderr, "Make sure that go.mod and go.sum files are commited with the "+
 				"license information files to maintain consistency between the dependencies and the license information.")
+			return errors.New("go.mod or go.sum are dirty")
 		}
 	}
 
@@ -466,8 +466,7 @@ func tidyGoModFile() error {
 	tidyCmd := exec.Command("go", "mod", "tidy")
 	out, err := tidyCmd.CombinedOutput()
 	if err != nil {
-		log.Printf("'go mod tidy' failed:\n%s\n", out)
-		return fmt.Errorf("'go mod tidy' failed: %w", err)
+		return fmt.Errorf("'go mod tidy' failed: %s", out)
 	}
 	return nil
 }
