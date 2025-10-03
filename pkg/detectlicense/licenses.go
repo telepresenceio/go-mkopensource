@@ -1,7 +1,6 @@
 package detectlicense
 
 import (
-	"bytes"
 	"errors"
 	"fmt"
 	"path/filepath"
@@ -105,8 +104,6 @@ var (
 //nolint:gochecknoglobals // Would be 'const'.
 var (
 	// split with "+" to avoid a false-positive on itself
-	spdxTag = []byte("SPDX-License" + "-Identifier:")
-
 	SpdxIdentifiers = map[string]License{
 		"0BSD":              ZeroBSD,
 		"Apache-2.0":        Apache2,
@@ -284,26 +281,25 @@ func DetectLicenses(packageName string, packageVersion string, files map[string]
 	return bareLicenses, nil
 }
 
+var idRegex = regexp.MustCompile(`SPDX-License-Identifier:\s*([A-Za-z0-9-.]+)(?:(?:\s*,|(?:,\s*|\s+)AND\s)\s*([A-Za-z0-9-.]+))*`)
+
 // IdentifySPDX takes the contents of a source-file and looks for SPDX
 // license identifiers.
 func IdentifySPDXLicenses(body []byte) (map[License]struct{}, error) {
 	licenses := make(map[License]struct{})
-	for bytes.Contains(body, spdxTag) {
-		tagPos := bytes.Index(body, spdxTag)
-		body = body[tagPos+len(spdxTag):]
-		idEnd := bytes.IndexByte(body, '\n')
-		if idEnd < 0 {
-			idEnd = len(body)
+	spdxMatches := idRegex.FindAllSubmatch(body, -1)
+	for _, match := range spdxMatches {
+		for ix := 1; ix < len(match); ix++ {
+			id := string(match[ix])
+			if id == "" {
+				continue
+			}
+			license, licenseOK := SpdxIdentifiers[id]
+			if !licenseOK {
+				return nil, fmt.Errorf("unknown SPDX identifier %q", id)
+			}
+			licenses[license] = struct{}{}
 		}
-		id := string(body[:idEnd])
-		body = body[idEnd:]
-
-		id = strings.TrimSpace(strings.TrimSuffix(strings.TrimSpace(id), "*/"))
-		license, licenseOK := SpdxIdentifiers[id]
-		if !licenseOK {
-			return nil, fmt.Errorf("unknown SPDX identifier %q", id)
-		}
-		licenses[license] = struct{}{}
 	}
 	return licenses, nil
 }
@@ -392,7 +388,11 @@ var (
 // to identify the license(s) in it.  If it is even a little unsure,
 // it returns nil.
 func IdentifyLicenses(body []byte) map[License]struct{} {
-	licenses := make(map[License]struct{})
+	licenses, err := IdentifySPDXLicenses(body)
+	if err == nil && len(licenses) > 0 {
+		return licenses
+	}
+	licenses = make(map[License]struct{})
 
 	switch {
 
