@@ -78,6 +78,7 @@ var (
 	LGPL3OrLater = License{Name: "GNU Lesser General Public License v3.0 or later", WeakCopyleft: true,
 		Restriction: Unrestricted}
 	MIT   = License{Name: "MIT license", URL: "https://opensource.org/licenses/MIT", Restriction: Unrestricted}
+	MIT0  = License{Name: "MIT No Attribution license", URL: "https://spdx.org/licenses/MIT-0.html", Restriction: Unrestricted}
 	MPL11 = License{Name: "Mozilla Public License 1.1", NoticeFile: true,
 		WeakCopyleft: true, URL: "https://spdx.org/licenses/MPL-1.1.html", Restriction: Unrestricted}
 	MPL2 = License{Name: "Mozilla Public License 2.0", NoticeFile: true,
@@ -135,6 +136,7 @@ var (
 		"LGPL-3.0-only":     LGPL3Only,
 		"LGPL-3.0-or-later": LGPL3OrLater,
 		"MIT":               MIT,
+		"MIT-0":             MIT0,
 		"MPL-1.1":           MPL11,
 		"MPL-2.0":           MPL2,
 		"ODC-By-1.0":        ODCBy10,
@@ -405,6 +407,20 @@ func IdentifyLicenses(body []byte) map[License]struct{} {
 	case reMatch(reISC, body):
 		licenses[ISC] = struct{}{}
 	case reMatch(reMIT, body):
+		licenses[MIT] = struct{}{}
+	case reMatch(reMIT0, body):
+		licenses[MIT0] = struct{}{}
+	case reMatch(regexp.MustCompile(
+		`\s*`+
+		reWrap(reQuote(`The MCP project is undergoing a licensing transition`))+
+		`[\s\S]*?`+
+		`-{3,}\s*`+
+		apacheMain+
+		`\s*-{3,}\s*`+
+		reMIT.String()+
+		`(?:\s*-{3,}[\s\S]*)?`),
+		body):
+		licenses[Apache2] = struct{}{}
 		licenses[MIT] = struct{}{}
 	case reMatch(reMPL, body):
 		licenses[MPL2] = struct{}{}

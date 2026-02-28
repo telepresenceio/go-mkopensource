@@ -43,6 +43,7 @@ func TestIdentifyLicenses(t *testing.T) {
 		"BSD3":         detectlicense.BSD3,
 		"ISC":          detectlicense.ISC,
 		"MIT":          detectlicense.MIT,
+		"MIT0":         detectlicense.MIT0,
 		"MPL2":         detectlicense.MPL2,
 		"CC-BY-SA-4.0": detectlicense.CcBySa40,
 	}
