@@ -38,6 +38,7 @@ var licensesByName = map[string]license.License{
 	license.LGPL3Only.Name:     license.LGPL3Only,
 	license.LGPL3OrLater.Name:  license.LGPL3OrLater,
 	license.MIT.Name:           license.MIT,
+	license.MIT0.Name:          license.MIT0,
 	license.MPL11.Name:         license.MPL11,
 	license.MPL2.Name:          license.MPL2,
 	license.ODCBy10.Name:       license.ODCBy10,
