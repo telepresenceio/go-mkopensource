@@ -39,4 +39,32 @@ var (
 			`WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE\.?\s*`) +
 		// Allow a footer.
 		`(` + reQuote(`<http://www.opensource.org/licenses/mit-license.php>`) + `\s*)?`))
+
+	reMIT0 = regexp.MustCompile(reCaseInsensitive(`\s*` +
+		// Any number of license-name, copyright-holder, or header-separator lines
+		`((` +
+		strings.Join([]string{
+			`MIT No Attribution`,
+			`(Portions )?Copyright [^\n]*(\s+All rights reserved\.)?`, // copyright line
+			`[^\n]{0,60}`,  // project name, and optionally, the provider
+			`https?://\S+`, // project url
+			`=+`,           // separator
+		}, `|`) +
+		`)\s*\n\s*)*` +
+		// The license itself (MIT-0 omits the attribution notice requirement)
+		reWrap(``+
+			`Permission is hereby granted, free of charge, to any person obtaining a copy of this`+"\n"+
+			`software and associated documentation files \(the`+"\n"+
+			`["“']Software["”']\), to deal in the Software without restriction, including`+"\n"+
+			`without limitation the rights to use, copy, modify, merge, publish,`+"\n"+
+			`distribute, sublicense, and/or sell copies of the Software, and to`+"\n"+
+			`permit persons to whom the Software is furnished to do so\.`+"\n"+
+			``+
+			`THE SOFTWARE IS PROVIDED ["“']AS IS["”'], WITHOUT WARRANTY OF ANY KIND,`+"\n"+
+			`EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF`+"\n"+
+			`MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND`+"\n"+
+			`NONINFRINGEMENT\. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE`+"\n"+
+			`LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION`+"\n"+
+			`OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION`+"\n"+
+			`WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE\.?\s*`)))
 )
